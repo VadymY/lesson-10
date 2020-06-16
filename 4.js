@@ -67,7 +67,7 @@ function compose(...cb) {
 
     return (arg) => this.cbs.reduceRight(function (prev, item, index, arr) {
         if (typeof (item) !== "function") {
-            throw new Error('it is not function');
+            throw new Error('it is not a function');
         }
         let temp = item(prev);
         if (typeof (temp) === "undefined") {
