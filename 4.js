@@ -27,35 +27,57 @@
  */
 
 // Решение
-function compose(...cb){
+// function compose(...cb){
+//
+//     this.cbs = [];
+//
+//     for (let  i = 0; i < cb.length; i++){
+//         this.cbs.push(cb[i]);
+//     }
+//
+//     return (arg) => {
+//         let next_arg = arg;
+//           if (typeof(next_arg) !== "undefined"){
+//             next_arg = String(next_arg);
+//         }
+//
+//         for (let i = this.cbs.length - 1;  i >= 0; i--){
+//             if (typeof(this.cbs[i]) !== "function"){
+//                 throw new Error('it is not function');
+//             }
+//
+//             next_arg = this.cbs[i](next_arg);
+//
+//             if (typeof(next_arg) === "undefined"){
+//                 throw new Error('function did not return a parameter');
+//             }
+//         }
+//
+//         return next_arg;
+//     }
+// }
+
+function compose(...cb) {
 
     this.cbs = [];
 
-    for (let  i = 0; i < cb.length; i++){
+    for (let i = 0; i < cb.length; i++) {
         this.cbs.push(cb[i]);
     }
 
-    return (arg) => {
-        let next_arg = arg;
-          if (typeof(next_arg) !== "undefined"){
-            next_arg = String(next_arg);
+    return (arg) => this.cbs.reduceRight(function (prev, item, index, arr) {
+        if (typeof (item) !== "function") {
+            throw new Error('it is not function');
+        }
+        let temp = item(prev);
+        if (typeof (temp) === "undefined") {
+            throw new Error('function did not return a parameter');
         }
 
-        for (let i = this.cbs.length - 1;  i >= 0; i--){
-            if (typeof(this.cbs[i]) !== "function"){
-                throw new Error('it is not function');
-            }
-
-            next_arg = this.cbs[i](next_arg);
-
-            if (typeof(next_arg) === "undefined"){
-                throw new Error('function did not return a parameter');
-            }
-        }
-
-        return next_arg;
-    }
+        return temp;
+    }, arg);
 }
+
 
 const result1 = compose(
     prevResult => prevResult + 'o',
